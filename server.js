@@ -13,6 +13,13 @@ server.get("/favorites", async (req, res) => {
     res.send({ favorites: await Favorites.findAll() });
 });
 
+// if heroku, process.env.PORT will be provided
+let port = process.env.PORT;
+if (!port) {
+    // otherwise, fallback to localhost 3001
+    port = 3001;
+}
+
 server.listen(3001, () => {
     console.log("server running");
 });
