@@ -28,6 +28,6 @@ if (!port) {
     port = 3001;
 }
 
-server.listen(3001, () => {
+server.listen(port, () => {
     console.log("server running");
 });
