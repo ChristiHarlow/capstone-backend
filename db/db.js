@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-//comment
+
 let options = {};
 let databaseURL = process.env.DATABASE_URL;
 if (!databaseURL) {
@@ -21,6 +21,7 @@ if (!databaseURL) {
     };
 }
 
+const db = new Sequelize(databaseURL, options);
 const Favorites = require("./Favorites")(db);
 
 const connectToDB = async () => {
