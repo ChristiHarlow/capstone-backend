@@ -1,7 +1,15 @@
 const express = require("express");
 const server = express();
 const cors = require("cors");
-server.use(cors());
+server.use(
+    cors({
+        credentials: true,
+        origin: [
+            "http://localhost:3000",
+            "https://christiharlo-capstone-frontend.herokuapp.com",
+        ],
+    })
+);
 
 const { db, Favorites } = require("./db/db.js");
 
