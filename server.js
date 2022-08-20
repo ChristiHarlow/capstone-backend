@@ -6,6 +6,7 @@ server.use(
         credentials: true,
         origin: [
             "http://localhost:3000",
+            "http://localhost:3001",
             "https://christiharlo-capstone-frontend.herokuapp.com",
         ],
     })
@@ -14,7 +15,7 @@ server.use(
 const { db, Favorites } = require("./db/db.js");
 
 server.get("/", (req, res) => {
-    res.send({ hello: "world" });
+    res.send({ hello: "world!" });
 });
 
 server.get("/favorites", async (req, res) => {
