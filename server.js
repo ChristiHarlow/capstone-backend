@@ -7,7 +7,7 @@ server.use(
         origin: [
             "http://localhost:3000",
             "http://localhost:3001",
-            "https://christiharlo-capstone-frontend.herokuapp.com",
+            "https://christiharlo-capstone-backend.herokuapp.com",
         ],
     })
 );
