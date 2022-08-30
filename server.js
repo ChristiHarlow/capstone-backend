@@ -4,7 +4,11 @@ const cors = require("cors");
 server.use(
     cors({
         credentials: true,
-        origin: ["https://christiharlo-capstone-backend.herokuapp.com"],
+        origin: [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "https://christiharlo-capstone-backend.herokuapp.com",
+        ],
     })
 );
 
