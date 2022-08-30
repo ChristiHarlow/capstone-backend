@@ -8,6 +8,7 @@ server.use(
             "http://localhost:3000",
             "http://localhost:3001",
             "https://christiharlo-capstone-backend.herokuapp.com",
+            "http://christisfavoritethings.com",
         ],
     })
 );
