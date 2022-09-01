@@ -13,6 +13,7 @@ const Favorites = (db) => {
         imageURL: DataTypes.STRING,
         price: DataTypes.TEXT,
         links: DataTypes.TEXT,
+        sort: DataTypes.INTEGER,
     });
 };
 

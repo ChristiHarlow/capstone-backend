@@ -21,7 +21,11 @@ server.get("/", (req, res) => {
 });
 
 server.get("/favorites", async (req, res) => {
-    res.send({ favorites: await Favorites.findAll() });
+    res.send({
+        favorites: await Favorites.findAll({
+            order: ["sort"],
+        }),
+    });
 });
 
 // if heroku, process.env.PORT will be provided
