@@ -37,19 +37,19 @@ if (process.env.RDS_HOSTNAME == "") {
 //   };
 //}
 
-const db = new Sequelize(databaseURL, options);
-const Favorites = require("./Favorites")(db);
+//const db = new Sequelize(databaseURL, options);
+//const Favorites = require("./Favorites")(db);
 
-const connectToDB = async () => {
-    try {
-        await db.authenticate();
-        console.log("Connected");
-        db.sync();
-    } catch (error) {
-        console.error(error);
-        console.error("Panic!");
-    }
-};
+//const connectToDB = async () => {
+//    try {
+//        await db.authenticate();
+//       console.log("Connected");
+//       db.sync();
+//   } catch (error) {
+//       console.error(error);
+//       console.error("Panic!");
+//   }
+//};
 
 connectToDB();
 
