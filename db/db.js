@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 // Setup DB models
 
 let db;
-if (process.env.RDS_HOSTNAME == "") {
+if (process.env.RDS_HOSTNAME) {
     console.log("Connecting to RDS", process.env.RDS_HOSTNAME);
     //if we are running on elastic beanstalk use elastic beanstalk connection
     db = new Sequelize(
