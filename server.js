@@ -4,7 +4,11 @@ const cors = require("cors");
 server.use(
     cors({
         credentials: true,
-        origin: ["http://christisfavoritethings.com", "http://localhost:3000"],
+        origin: [
+            "http://christisfavoritethings.com",
+            "http://www.christisfavoritethings.com",
+            "http://localhost:3000",
+        ],
     })
 );
 
@@ -22,11 +26,9 @@ server.get("/favorites", async (req, res) => {
     });
 });
 
-// if heroku, process.env.PORT will be provided
-let port = process.env.PORT;
-if (!port) {
-    // otherwise, fallback to localhost 3001
-    port = 3001;
+let port = 3001;
+if (process.env.PORT) {
+    port = process.env.PORT;
 }
 
 server.listen(port, () => {
