@@ -4,11 +4,7 @@ const cors = require("cors");
 server.use(
     cors({
         credentials: true,
-        origin: [
-            "http://christisfavoritethings.com",
-            "http://localhost:3000",
-            "http://localhost:3001",
-        ],
+        origin: ["http://christisfavoritethings.com", "http://localhost:3000"],
     })
 );
 
