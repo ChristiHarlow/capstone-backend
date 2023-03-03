@@ -24,7 +24,7 @@ const connectToDB = async () => {
     try {
         await db.authenticate();
         console.log("Connected");
-        db.sync(); //Sync by creating the tables based off our models if they don't already exist
+        await db.sync(); //Sync by creating the tables based off our models if they don't already exist
     } catch (error) {
         console.error(error);
         console.error("Panic!");
