@@ -5,8 +5,8 @@ server.use(
     cors({
         credentials: true,
         origin: [
-            "http://christisfavoritethings.com",
-            "http://www.christisfavoritethings.com",
+            "https://christisfavoritethings.com/",
+            "https://www.christisfavoritethings.com",
             "http://localhost:3000",
         ],
     })

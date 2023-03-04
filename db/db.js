@@ -6,7 +6,7 @@ if (process.env.RDS_HOSTNAME) {
     console.log("Connecting to RDS", process.env.RDS_HOSTNAME);
     //if we are running on elastic beanstalk use elastic beanstalk connection
     db = new Sequelize(
-        `postgres://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}:${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`,
+        `postgres://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}@${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`,
         { logging: false }
     );
 } else {
