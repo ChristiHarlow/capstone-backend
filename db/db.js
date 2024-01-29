@@ -2,13 +2,9 @@ const Sequelize = require("sequelize");
 // Setup DB models
 
 let db;
-if (process.env.RDS_HOSTNAME) {
-    console.log("Connecting to RDS", process.env.RDS_HOSTNAME);
-    //if we are running on elastic beanstalk use elastic beanstalk connection
-    db = new Sequelize(
-        `postgres://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}@${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`,
-        { logging: false }
-    );
+if (process.env.FLY_DATABASE_URL) {
+    console.log("Connecting to Fly.io database");
+    db = new Sequelize(process.env.FLY_DATABASE_URL, { logging: false });
 } else {
     console.log("Connecting to local database");
     // If we're running locally, use the local host connection
