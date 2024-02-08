@@ -5,7 +5,7 @@ server.use(
     cors({
         credentials: true,
         origin: [
-            "https://christisfavoritethings.com/",
+            "https://christisfavoritethings.com",
             "https://www.christisfavoritethings.com",
             "http://localhost:3000",
         ],
@@ -27,6 +27,9 @@ server.get("/favorites", async (req, res) => {
 });
 
 let port = 3001;
+
+// console.log(process.env);
+
 if (process.env.PORT) {
     port = process.env.PORT;
 }
