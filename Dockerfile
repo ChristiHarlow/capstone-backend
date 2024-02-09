@@ -27,12 +27,18 @@ RUN npm ci
 # Copy application code
 COPY --link . .
 
+# You might need to run a build step here, depending on your app
+# For example, if you're using TypeScript or building React/Vue/Angular for SSR:
+# RUN npm run build
 
 # Final stage for app image
 FROM base
 
 # Copy built application
 COPY --from=build /app /app
+
+# Ensure the user is not root to improve security
+USER node
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000

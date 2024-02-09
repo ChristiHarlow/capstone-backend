@@ -1,34 +1,72 @@
 const Sequelize = require("sequelize");
-// Setup DB models
 
-let db;
+let sequelize;
 
+// Environment-based database connection
 if (process.env.DATABASE_URL) {
     console.log("Connecting to Fly.io database");
-    db = new Sequelize(process.env.DATABASE_URL, { logging: false });
-} else {
-    console.log("Connecting to local database");
-    // If we're running locally, use the local host connection
-    db = new Sequelize("postgres://christiharlow@localhost:5432/favorites", {
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+        dialect: "postgres", // Assuming PostgreSQL. Adjust accordingly.
+        protocol: "postgres",
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false, // Note: Only use this for trusted servers.
+            },
+        },
         logging: false,
     });
+} else {
+    console.log("Connecting to local database");
+    sequelize = new Sequelize(
+        "postgres://christiharlow@localhost:5432/favorites",
+        {
+            dialect: "postgres",
+            logging: false,
+        }
+    );
 }
 
-// const db = new Sequelize(databaseURL, options);
-const Favorites = require("./Favorites")(db);
-// Connect and sync to DB
+// Define the Favorites model
+const Favorites = sequelize.define(
+    "Favorites",
+    {
+        // Example attributes. Adjust according to your schema.
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        name: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        sort: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        // Add other attributes here
+    },
+    {
+        // Model options
+    }
+);
+
+// Function to connect and synchronize the database
 const connectToDB = async () => {
     try {
-        await db.authenticate();
-        console.log("Connected");
-        await db.sync(); //Sync by creating the tables based off our models if they don't already exist
+        await sequelize.authenticate();
+        console.log(
+            "Connection to the database has been established successfully."
+        );
+        await sequelize.sync(); // Consider using sequelize.sync({ force: true }) for development only.
     } catch (error) {
-        console.error(error);
-        console.error("Panic!");
+        console.error("Unable to connect to the database:", error);
     }
 };
 
+// Execute the connect function
 connectToDB();
 
-module.exports = { db, Favorites };
-// Export out the DB and Model so we can use it elsewhere in our code
+// Export the sequelize instance and models
+module.exports = { sequelize, Favorites };
