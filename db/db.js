@@ -1,77 +1,73 @@
 require("dotenv").config();
+const { Sequelize } = require("sequelize");
 
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
-const rateLimit = require("express-rate-limit");
-const server = express();
+let sequelize;
 
-// Environment-specific CORS configuration
-const corsOptions = {
-  credentials: true,
-  origin:
-    process.env.NODE_ENV === "production"
-      ? [
-          "https://christisfavoritethings.com",
-          "https://www.christisfavoritethings.com",
-        ]
-      : ["http://localhost:3000"],
+// Determine database connection details from environment variables
+const databaseUrl = process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
+
+// Improved SSL configuration for production
+let sequelizeOptions = {
+  dialect: "postgres",
+  logging: false,
 };
-server.use(cors(corsOptions));
 
-// Security headers
-server.use(helmet());
+if (process.env.DATABASE_URL) {
+  console.log("Connecting to Fly.io database");
+  sequelizeOptions = {
+    ...sequelizeOptions,
+    protocol: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized:
+          process.env.NODE_ENV === "production" ? true : false, // Adjust based on environment
+      },
+    },
+  };
+} else {
+  console.log("Connecting to local database");
+}
 
-// Logging
-server.use(morgan("combined"));
+sequelize = new Sequelize(databaseUrl, sequelizeOptions);
 
-// Rate limiting
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-});
-server.use(apiLimiter);
-
-// Body parsing middleware
-server.use(express.json());
-
-// Serve static files - adjust "public" to your static assets directory
-server.use(express.static("public"));
-
-// Import database and models
-const { db, Favorites } = require("./db/db.js");
-
-// Database connection check
-db.authenticate()
-  .then(() =>
-    console.log("Database connection has been established successfully.")
-  )
-  .catch((err) => console.error("Unable to connect to the database:", err));
-
-// Root route
-server.get("/", (req, res) => {
-  res.json({ hello: "world!" });
-});
-
-// Enhanced favorites route with error handling
-server.get("/favorites", async (req, res) => {
-  try {
-    const favorites = await Favorites.findAll({
-      order: [["sort", "ASC"]], // Correctly structured order array
-    });
-    res.json({ favorites }); // Use .json to automatically set Content-Type to application/json
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
-    res.status(500).json({
-      error: "An error occurred while fetching favorites.",
-    });
+// Define the Favorites model
+const Favorites = sequelize.define(
+  "Favorites",
+  {
+    // Example attributes. Adjust according to your schema.
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    sort: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    // Add other attributes here
+  },
+  {
+    // Model options
   }
-});
+);
 
-// Simplify port configuration
-const port = process.env.PORT || 3001;
+// Function to connect and synchronize the database
+const connectToDB = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log(
+      "Connection to the database has been established successfully."
+    );
+    await sequelize.sync(); // Consider using sequelize.sync({ force: true }) for development only.
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+};
 
-server.listen(port, "0.0.0.0", () => {
-  console.log(`Server running on port ${port}`);
-});
+// Export the sequelize instance, models, and connect function
+module.exports = { sequelize, Favorites, connectToDB };
