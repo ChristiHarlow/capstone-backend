@@ -41,6 +41,11 @@ app.use(express.json());
 // Serve static files - adjust "public" to your static assets directory
 app.use(express.static("public"));
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
 // Root route
 app.get("/", (req, res) => {
   res.json({ hello: "world!" });
@@ -61,22 +66,15 @@ app.get("/favorites", async (req, res) => {
   }
 });
 
-<<<<<<< Updated upstream
-// Simplify port configuration
-const port = process.env.PORT || 3000;
-
-server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
-=======
-// Attempt to connect to the database before starting the server
+// Use the connectToDB function to ensure DB connection before starting the server
 connectToDB()
   .then(() => {
-    console.log("Database connected successfully.");
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    const port = process.env.PORT || 3000;
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`Server running on port ${port}.`);
+    });
   })
-  .catch((error) => {
-    console.error("Failed to connect to the database:", error);
+  .catch((err) => {
+    console.error("Failed to connect to the database:", err);
+    process.exit(1); // Exit the process with an error code
   });
->>>>>>> Stashed changes
