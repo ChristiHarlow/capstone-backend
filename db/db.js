@@ -1,73 +1,67 @@
 require("dotenv").config();
-const { Sequelize } = require("sequelize");
-
-let sequelize;
+const { Sequelize, DataTypes } = require("sequelize");
 
 // Determine database connection details from environment variables
 const databaseUrl = process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
 
-// Improved SSL configuration for production
+// Initialize sequelize with appropriate options
 let sequelizeOptions = {
   dialect: "postgres",
-  logging: false,
+  logging: false, // Toggle logging if needed
 };
 
 if (process.env.DATABASE_URL) {
-  console.log("Connecting to Fly.io database");
-  sequelizeOptions = {
-    ...sequelizeOptions,
-    protocol: "postgres",
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized:
-          process.env.NODE_ENV === "production" ? true : false, // Adjust based on environment
-      },
+  console.log("Connecting to Fly.io database with SSL configuration");
+  sequelizeOptions.dialectOptions = {
+    ssl: {
+      require: process.env.NODE_ENV === "production",
+      rejectUnauthorized: process.env.NODE_ENV === "production", // Ensure strict SSL validation in production
     },
   };
 } else {
-  console.log("Connecting to local database");
+  console.log("Connecting to local database without SSL configuration");
 }
 
-sequelize = new Sequelize(databaseUrl, sequelizeOptions);
+const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
 
 // Define the Favorites model
 const Favorites = sequelize.define(
   "Favorites",
   {
-    // Example attributes. Adjust according to your schema.
     id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     sort: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    // Add other attributes here
+    // Add other attributes here, ensuring they match your database schema
+    // For example, category, summary, imageURL, price, links, etc.
   },
   {
-    // Model options
+    // Model options can be specified here
+    tableName: "favorites", // Explicitly specify table name if it doesn't match the model name
   }
 );
 
 // Function to connect and synchronize the database
-const connectToDB = async () => {
+async function connectToDB() {
   try {
     await sequelize.authenticate();
     console.log(
       "Connection to the database has been established successfully."
     );
-    await sequelize.sync(); // Consider using sequelize.sync({ force: true }) for development only.
+    await sequelize.sync(); // Consider using { force: true } cautiously in development
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
-};
+}
 
 // Export the sequelize instance, models, and connect function
 module.exports = { sequelize, Favorites, connectToDB };
