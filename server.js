@@ -5,20 +5,21 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
-const { sequelize, Favorites, connectToDB } = require("./db/db.js");
+const { connectToDB } = require("./db");
+const { Favorites } = require("./models/Favorites");
 
 const app = express();
 
 // Environment-specific CORS configuration
 const corsOptions = {
-  credentials: true,
-  origin:
-    process.env.NODE_ENV === "production"
-      ? [
-          "https://christisfavoritethings.com",
-          "https://www.christisfavoritethings.com",
-        ]
-      : ["http://localhost:3000"],
+    credentials: true,
+    origin:
+        process.env.NODE_ENV === "production"
+            ? [
+                  "https://christisfavoritethings.com",
+                  "https://www.christisfavoritethings.com",
+              ]
+            : ["http://localhost:3000"],
 };
 app.use(cors(corsOptions));
 
@@ -30,8 +31,8 @@ app.use(morgan("combined"));
 
 // Rate limiting
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
 });
 app.use("/api/", apiLimiter); // Apply rate limiting to API routes
 
@@ -42,39 +43,39 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
+    console.error(err.stack);
+    res.status(500).json({ error: "Internal Server Error" });
 });
 
 // Root route
 app.get("/", (req, res) => {
-  res.json({ hello: "world!" });
+    res.json({ hello: "world!" });
 });
 
 // Enhanced favorites route with error handling
 app.get("/favorites", async (req, res) => {
-  try {
-    const favorites = await Favorites.findAll({
-      order: [["sort", "ASC"]], // Correctly structured order array
-    });
-    res.json(favorites); // Simplified response
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
-    res.status(500).json({
-      error: "An error occurred while fetching favorites.",
-    });
-  }
+    try {
+        const favorites = await Favorites.findAll({
+            order: [["sort", "ASC"]], // Correctly structured order array
+        });
+        res.json(favorites); // Simplified response
+    } catch (error) {
+        console.error("Error fetching favorites:", error);
+        res.status(500).json({
+            error: "An error occurred while fetching favorites.",
+        });
+    }
 });
 
 // Use the connectToDB function to ensure DB connection before starting the server
 connectToDB()
-  .then(() => {
-    const port = process.env.PORT || 3000;
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`Server running on port ${port}.`);
+    .then(() => {
+        const port = process.env.PORT || 3000;
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}.`);
+        });
+    })
+    .catch((err) => {
+        console.error("Failed to connect to the database:", err);
+        process.exit(1); // Exit the process with an error code
     });
-  })
-  .catch((err) => {
-    console.error("Failed to connect to the database:", err);
-    process.exit(1); // Exit the process with an error code
-  });
