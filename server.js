@@ -71,7 +71,7 @@ app.get("/favorites", async (req, res) => {
 connectToDB()
     .then(() => {
         const port = process.env.PORT || 3000;
-        app.listen(port, () => {
+        app.listen("0.0.0.0.", () => {
             console.log(`Server running on port ${port}.`);
         });
     })
