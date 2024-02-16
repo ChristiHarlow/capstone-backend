@@ -5,8 +5,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
-const { connectToDB } = require("./db");
-const { Favorites } = require("./models/Favorites");
+const { sequelize, connectToDB } = require("./db/db");
+const { Favorites } = require("./db/Favorites");
 
 const app = express();
 

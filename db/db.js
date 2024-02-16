@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { Sequelize } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
 // Determine database connection details from environment variables
 const databaseUrl = process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
@@ -10,12 +10,12 @@ let sequelizeOptions = {
     logging: false, // Toggle logging if needed
 };
 
-if (process.env.DATABASE_URL) {
+if (process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
     console.log("Connecting to Fly.io database with SSL configuration");
     sequelizeOptions.dialectOptions = {
         ssl: {
-            require: process.env.NODE_ENV === "production",
-            rejectUnauthorized: process.env.NODE_ENV === "production", // Ensure strict SSL validation in production
+            require: true,
+            rejectUnauthorized: true, // Ensure strict SSL validation in production
         },
     };
 } else {
@@ -23,6 +23,7 @@ if (process.env.DATABASE_URL) {
 }
 
 const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
+const ModelName = require("../models/ModelName");
 
 // Define the Favorites model
 const Favorites = sequelize.define(
