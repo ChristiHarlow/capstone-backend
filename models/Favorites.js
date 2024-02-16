@@ -1,5 +1,6 @@
+// models/Favorites.js
 const { DataTypes } = require("sequelize");
-const sequelize = require("../db"); // Adjust the path according to your project structure
+const sequelize = require("../db");
 
 const Favorites = sequelize.define(
     "Favorites",
@@ -10,12 +11,12 @@ const Favorites = sequelize.define(
             autoIncrement: true,
         },
         name: {
-            type: DataTypes.STRING(255), // Example max length
-            allowNull: false, // Assuming name is required
+            type: DataTypes.STRING(255),
+            allowNull: false,
         },
         category: {
             type: DataTypes.STRING(255),
-            allowNull: true, // Assuming category can be optional
+            allowNull: true,
         },
         summary: {
             type: DataTypes.TEXT,
@@ -26,7 +27,7 @@ const Favorites = sequelize.define(
             allowNull: true,
         },
         price: {
-            type: DataTypes.DECIMAL(10, 2), // Assuming price is a decimal value
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: true,
         },
         links: {
@@ -39,7 +40,7 @@ const Favorites = sequelize.define(
         },
     },
     {
-        tableName: "favorites", // Explicitly specify table name
+        tableName: "favorites",
     }
 );
 

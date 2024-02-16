@@ -10,6 +10,7 @@ let sequelizeOptions = {
     logging: false, // Toggle logging if needed
 };
 
+// Adjusting for SSL configuration based on environment
 if (process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
     console.log("Connecting to Fly.io database with SSL configuration");
     sequelizeOptions.dialectOptions = {
@@ -23,7 +24,9 @@ if (process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
 }
 
 const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
-const ModelName = require("../models/ModelName");
+
+// Assuming ModelName.js is properly exporting a Sequelize model
+const ModelName = require("../models/ModelName")(sequelize, DataTypes);
 
 // Define the Favorites model
 const Favorites = sequelize.define(
@@ -42,12 +45,10 @@ const Favorites = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        // Add other attributes here, ensuring they match your database schema
-        // For example, category, summary, imageURL, price, links, etc.
+        // Additional model attributes...
     },
     {
-        // Model options can be specified here
-        tableName: "favorites", // Explicitly specify table name if it doesn't match the model name
+        tableName: "favorites", // Explicitly specify table name
     }
 );
 
@@ -58,10 +59,12 @@ async function connectToDB() {
         console.log(
             "Connection to the database has been established successfully."
         );
+        // Optionally synchronize models here
+        // await sequelize.sync({ force: true }); // Be cautious with { force: true } as it will drop existing tables
     } catch (error) {
         console.error("Unable to connect to the database:", error);
     }
 }
 
 // Export the sequelize instance, models, and connect function
-module.exports = { sequelize, Favorites, connectToDB };
+module.exports = { sequelize, Favorites, ModelName, connectToDB };
