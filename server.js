@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
 // Importing Sequelize instance and models
-const sequelize = require("../db/db");
+const sequelize = require("./db/db");
 const Favorites = require("./models/Favorites");
 const ModelName = require("./models/ModelName"); // Ensure this model is correctly defined and exported
 
