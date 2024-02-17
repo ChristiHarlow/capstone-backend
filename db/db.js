@@ -9,7 +9,7 @@ const sequelizeOptions = {
     logging: false, // Adjust logging as needed
 };
 
-if (process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
     console.log("Connecting to Fly.io database with SSL configuration");
     sequelizeOptions.dialectOptions = {
         ssl: {
@@ -22,5 +22,17 @@ if (process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
 }
 
 const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
+
+// Function to connect and synchronize the database
+async function connectToDB() {
+    try {
+        await sequelize.authenticate();
+        console.log("Connection has been established successfully.");
+        // Uncomment the line below if you want to sync all models with the database
+        // await sequelize.sync();
+    } catch (error) {
+        console.error("Unable to connect to the database:", error);
+    }
+}
 
 module.exports = sequelize;
