@@ -9,7 +9,7 @@ const sequelizeOptions = {
     logging: false, // Adjust logging as needed
 };
 
-if (process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
+if (process.env.DATABASE_URL) {
     console.log("Connecting to Fly.io database with SSL configuration");
     sequelizeOptions.dialectOptions = {
         ssl: {
