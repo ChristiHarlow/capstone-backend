@@ -7,7 +7,7 @@ app = "christi-capstone-backend"
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 2
   processes = ['app']
 
 [[services]]
@@ -27,6 +27,6 @@ interval = 10000
 timeout = 2000
 
 [[vm]]
-  cpu_kind = 'shared'
-  cpus = 1
-  memory_mb = 1024
+  cpu_kind = 'dedicated'
+  cpus = 2
+  memory_mb = 2048
