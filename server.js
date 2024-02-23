@@ -4,45 +4,41 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
-
-// Importing Sequelize instance and models
 const sequelize = require("./db/db");
 const Favorites = require("./models/Favorites");
-const ModelName = require("./models/ModelName"); // Ensure this model is correctly defined and exported
+const ModelName = require("./models/ModelName");
 
 const app = express();
 
-// Middleware
-app.use(
-    cors({
-        credentials: true,
-        origin:
-            process.env.NODE_ENV === "production"
-                ? ["https://christisfavoritethings.com"]
-                : ["http://localhost:3000"],
-    })
-);
+// CORS options
+const corsOptions = {
+    credentials: true,
+    origin:
+        process.env.NODE_ENV === "production"
+            ? "https://christisfavoritethings.com"
+            : "http://localhost:3000",
+};
+
+// Enable CORS with the options
+app.use(cors(corsOptions));
+
 app.use(helmet());
-app.use(morgan("dev")); // 'dev' for development, 'combined' for production
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(express.json());
 
-// Apply rate limiting to all requests
 app.use(
     rateLimit({
         windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 100, // Limit each IP to 100 requests per window
+        max: 100, // Limit each IP to 100 requests per windowMs
     })
 );
 
-// Serve static files from 'public' directory
 app.use(express.static("public"));
 
-// Routes
 app.get("/", (req, res) => {
     res.json({ message: "API is running..." });
 });
 
-// Route for fetching all favorites
 app.get("/favorites", async (req, res) => {
     try {
         const favorites = await Favorites.findAll();
@@ -53,7 +49,6 @@ app.get("/favorites", async (req, res) => {
     }
 });
 
-// Example route for another model
 app.get("/modelnames", async (req, res) => {
     try {
         const instances = await ModelName.findAll();
@@ -64,19 +59,26 @@ app.get("/modelnames", async (req, res) => {
     }
 });
 
-// Error handling middleware
+// Error handling middleware should be the last piece of middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send("Something broke!");
 });
 
-// Database connection and server start
+// Start the server
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server is running on port ${PORT}.`);
+});
+
+// Database connection
 sequelize
     .authenticate()
     .then(() => {
         console.log("Connection has been established successfully.");
-        const PORT = process.env.PORT || 3000;
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
+        // Uncomment below line if your models are not in sync with the db
+        // return sequelize.sync();
     })
     .catch((err) => {
         console.error("Unable to connect to the database:", err);

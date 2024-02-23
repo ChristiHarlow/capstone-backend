@@ -21,7 +21,7 @@ if (process.env.DATABASE_URL) {
     console.log("Connecting to local database without SSL configuration");
 }
 
-const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
+const sequelize = new Sequelize(process.env.LOCAL_DATABASE_URL);
 
 // Function to connect and synchronize the database
 async function connectToDB() {
