@@ -1,5 +1,7 @@
 # fly.toml app configuration file generated for christi-capstone-backend on 2024-01-28T22:11:45-05:00
 #
+app = "christi-capstone-backend"
+
 [http_service]
   internal_port = 3000
   force_https = true
