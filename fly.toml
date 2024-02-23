@@ -27,6 +27,6 @@ interval = 10000
 timeout = 2000
 
 [[vm]]
-  cpu_kind = 'dedicated'
+  cpu_kind = 'shared'
   cpus = 2
   memory_mb = 2048
