@@ -10,29 +10,14 @@ const sequelizeOptions = {
 };
 
 if (process.env.DATABASE_URL) {
-    console.log("Connecting to Fly.io database with SSL configuration");
     sequelizeOptions.dialectOptions = {
         ssl: {
             require: true,
             rejectUnauthorized: true,
         },
     };
-} else {
-    console.log("Connecting to local database without SSL configuration");
 }
 
-const sequelize = new Sequelize(process.env.LOCAL_DATABASE_URL);
-
-// Function to connect and synchronize the database
-async function connectToDB() {
-    try {
-        await sequelize.authenticate();
-        console.log("Connection has been established successfully.");
-        // Uncomment the line below if you want to sync all models with the database
-        // await sequelize.sync();
-    } catch (error) {
-        console.error("Unable to connect to the database:", error);
-    }
-}
+const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
 
 module.exports = sequelize;

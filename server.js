@@ -4,28 +4,20 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+
+// Sequelize connection
 const sequelize = require("./db/db");
+// Sequelize models
 const Favorites = require("./models/Favorites");
-const ModelName = require("./models/ModelName");
 
 const app = express();
 
-// CORS options
-const corsOptions = {
-    credentials: true,
-    origin:
-        process.env.NODE_ENV === "production"
-            ? "https://christisfavoritethings.com"
-            : "http://localhost:3000",
-};
-
-// Enable CORS with the options
-app.use(cors(corsOptions));
-
+// Middleware
+app.use(cors()); // Apply CORS with default settings
 app.use(helmet());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(express.json());
-
+app.use(express.static("public"));
 app.use(
     rateLimit({
         windowMs: 15 * 60 * 1000, // 15 minutes
@@ -33,12 +25,12 @@ app.use(
     })
 );
 
-app.use(express.static("public"));
-
+// Route Handlers
 app.get("/", (req, res) => {
     res.json({ message: "API is running..." });
 });
 
+// Example Sequelize integration with a route
 app.get("/favorites", async (req, res) => {
     try {
         const favorites = await Favorites.findAll();
@@ -49,17 +41,7 @@ app.get("/favorites", async (req, res) => {
     }
 });
 
-app.get("/modelnames", async (req, res) => {
-    try {
-        const instances = await ModelName.findAll();
-        res.json(instances);
-    } catch (error) {
-        console.error("Error fetching ModelName instances:", error);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-// Error handling middleware should be the last piece of middleware
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send("Something broke!");
@@ -67,19 +49,15 @@ app.use((err, req, res, next) => {
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
+    // Database connection
+    sequelize
+        .authenticate()
+        .then(() => {
+            console.log("Connection has been established successfully.");
+        })
+        .catch((err) => {
+            console.error("Unable to connect to the database:", err);
+        });
 });
-
-// Database connection
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log("Connection has been established successfully.");
-        // Uncomment below line if your models are not in sync with the db
-        // return sequelize.sync();
-    })
-    .catch((err) => {
-        console.error("Unable to connect to the database:", err);
-    });
