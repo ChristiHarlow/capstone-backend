@@ -10,12 +10,7 @@ const sequelizeOptions = {
 };
 
 if (process.env.DATABASE_URL) {
-    sequelizeOptions.dialectOptions = {
-        ssl: {
-            require: true,
-            rejectUnauthorized: true,
-        },
-    };
+    delete sequelizeOptions.dialectOptions;
 }
 
 const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
