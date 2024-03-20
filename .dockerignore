@@ -37,5 +37,4 @@ README.md
 LICENSE
 
 # Add any specific project files or directories that are not needed in the container
-# e.g., source files for languages not used in the runtime, configuration files for development, etc.
-
+# e.g., source files for languages not used in the runtime, configuration files for development, etc
