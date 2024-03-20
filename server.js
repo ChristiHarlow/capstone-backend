@@ -33,7 +33,7 @@ app.get("/favorites", async (req, res) => {
         res.json(favorites);
     } catch (error) {
         console.error("Error fetching favorites:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error" , details: error.message });
     }
 });
 
