@@ -6,19 +6,9 @@ const databaseUrl = process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
 
 const sequelizeOptions = {
     dialect: "postgres",
-    logging: false, // Adjust logging as needed
-    dialectOptions: {
-        ssl: {
-            require: false,
-            rejectUnauthorized: false
-        }
-    }
+    logging: false, // set to console.log to see SQL queries, or false to disable logging
     
 };
-
-if (process.env.DATABASE_URL) {
-    delete sequelizeOptions.dialectOptions;
-}
 
 console.log('Database URL:', databaseUrl);
 const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
