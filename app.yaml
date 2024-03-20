@@ -1,4 +1,6 @@
-runtime: nodejs20
+env_variables:
+DATABASE_URL=postgres://christiharlow:Kiara219@localhost:5432/favorites
+
 
 # Use automatic scaling for simplicity
 automatic_scaling:
