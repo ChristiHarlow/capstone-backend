@@ -27,13 +27,15 @@ app.use(
 
 
 // Example Sequelize integration with a route
-app.get("/favorites", async (req, res, next) => {
+app.get("/favorites", async (req, res) => {
     try {
+        console.log("Fetching favorites...");
         const favorites = await Favorites.findAll();
+        console.log("Favorites fetched:", favorites);
         res.json(favorites);
     } catch (error) {
         console.error("Error fetching favorites:", error);
-        next(error); // Pass the error to the global error handler
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
 });
 
