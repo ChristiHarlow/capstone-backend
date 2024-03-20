@@ -8,7 +8,10 @@ const sequelizeOptions = {
     dialect: "postgres",
     logging: false, // Adjust logging as needed
     dialectOptions: {
-        ssl: false
+        ssl: {
+            require: false,
+            rejectUnauthorized: false
+        }
     }
     
 };
