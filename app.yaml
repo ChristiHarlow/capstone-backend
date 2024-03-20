@@ -1,4 +1,4 @@
-runtime: nodejs14
+runtime: nodejs
 
 # Use automatic scaling for simplicity
 automatic_scaling:
