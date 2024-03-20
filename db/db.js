@@ -4,14 +4,11 @@ const { Sequelize } = require("sequelize");
 
 const databaseUrl = process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
 
-const sequelizeOptions = {
+console.log('Database URL:', databaseUrl); // Ensure this outputs the correct database URL
+const sequelize = new Sequelize(databaseUrl, {
     dialect: "postgres",
-    logging: false, // set to console.log to see SQL queries, or false to disable logging
-    
-};
-
-console.log('Database URL:', databaseUrl);
-const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
+    logging: console.log // or false to disable logging
+});
 
 // Test the connection
 async function testConnection() {
