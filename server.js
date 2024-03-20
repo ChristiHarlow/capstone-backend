@@ -25,10 +25,6 @@ app.use(
     })
 );
 
-// Route Handlers
-app.get("/", (req, res) => {
-    res.json({ message: "API is running..." });
-});
 
 // Example Sequelize integration with a route
 app.get("/favorites", async (req, res) => {
@@ -44,15 +40,12 @@ app.get("/favorites", async (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send("Something broke!");
+    res.status(500).send("Internal Server Error");
 });
 
 // Start the server
 const PORT = process.env.PORT || 3020;
 
-app.get("/", (req, res) => {
-    res.send("Hello from server.js!");
-});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
