@@ -13,6 +13,7 @@ if (process.env.DATABASE_URL) {
     delete sequelizeOptions.dialectOptions;
 }
 
+console.log('Database URL:', databaseUrl);
 const sequelize = new Sequelize(databaseUrl, sequelizeOptions);
 
 // Test the connection
