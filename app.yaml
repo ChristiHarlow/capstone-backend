@@ -1,6 +1,13 @@
-env_variables:
-DATABASE_URL=postgres://christiharlow:Kiara219@localhost:5432/favorites
+runtime: nodejs20
 
+env_variables:
+  DB_USER: 'christiharlow'
+  DB_PASS: 'Kiara219'
+  DB_NAME: 'favorites'
+  INSTANCE_CONNECTION_NAME: 'favorite-things-120671:us-east5:favorites-capstone'
+
+beta_settings:
+  cloud_sql_instances: "ffavorite-things-120671:us-east5:favorites-capstone"
 
 # Use automatic scaling for simplicity
 automatic_scaling:
