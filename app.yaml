@@ -12,4 +12,4 @@ beta_settings:
 # Use automatic scaling for simplicity
 automatic_scaling:
   min_instances: 1
-  max_instances: 10
+  max_instances: 5
