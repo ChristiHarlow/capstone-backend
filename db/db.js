@@ -1,26 +1,30 @@
-require("dotenv").config();  // Ensures that environment variables from the .env file are loaded
+require("dotenv").config();
 const { Sequelize } = require("sequelize");
 
-// Fetches the database URL from the environment variables
-const databaseUrl = process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
+// Use Cloud SQL Proxy connection string format if running on GAE
+const isAppEngine = process.env.INSTANCE_CONNECTION_NAME != null;
+const databaseUrl = isAppEngine 
+    ? `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}/${process.env.DB_NAME}`
+    : process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
 
-// Initialize Sequelize with the database URL and configuration
 const sequelize = new Sequelize(databaseUrl, {
-    dialect: "postgres",  // Specifies that you are using PostgreSQL
-    logging: console.log  // Enables logging of SQL queries (set to `false` to disable logging)
+    dialect: 'postgres',
+    logging: console.log,
+    dialectOptions: isAppEngine ? {
+        socketPath: `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`
+    } : {}
 });
 
 // Function to test the database connection
 async function testConnection() {
     try {
-        await sequelize.authenticate();  // Tries to authenticate with the database
+        await sequelize.authenticate();
         console.log("Connection has been established successfully.");
     } catch (error) {
-        console.error("Unable to connect to the database:", error);  // Logs an error if the connection fails
+        console.error("Unable to connect to the database:", error);
     }
 }
 
-testConnection();  // Calls the function to test the connection
+testConnection();
 
-module.exports = sequelize;  // Exports the sequelize instance for use in other parts of the application
-
+module.exports = sequelize;
