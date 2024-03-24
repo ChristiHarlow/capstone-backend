@@ -25,6 +25,10 @@ app.use(
     })
 );
 
+// Define the root route
+app.get('/', (req, res) => {
+    res.send('Welcome to the application!');
+});
 
 // Example Sequelize integration with a route
 app.get("/favorites", async (req, res) => {
