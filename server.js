@@ -38,14 +38,14 @@ app.get("/favorites", async (req, res) => {
         res.json({ message: "Route is working" });
     } catch (error) {
         console.error("Error fetching favorites:", error);
-        res.status(500).json({ error: "Internal Server Error", details: error.message });
+        res.status(500).json({ error: "Internal Christi Server Error", details: error.message });
     }
 });
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({error: "Internal Server Error", details: err.message});
+    res.status(500).json({error: "Internal Christi Server Error", details: err.message});
 });
 
 // Start the server
