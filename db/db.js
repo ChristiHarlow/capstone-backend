@@ -5,8 +5,7 @@ const { Sequelize } = require("sequelize");
 const isAppEngine = process.env.INSTANCE_CONNECTION_NAME != null;
 const databaseUrl = isAppEngine
     ? `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}/${process.env.DB_NAME}`
-    // : process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
-    : process.env.DATABASE_URL;
+: process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL;
 
 const sequelize = new Sequelize(databaseUrl, {
     dialect: 'postgres',
