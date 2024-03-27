@@ -1,4 +1,4 @@
-// models/Favorites.js
+// Favorites.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/db");
 
