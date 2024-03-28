@@ -4,7 +4,7 @@ require("dotenv").config();
 // Import required modules
 const express = require("express");
 const sequelize = require("./db/db"); // Import Sequelize instance
-const Favorites = require("./Favorites"); // Import Favorites model
+const Favorites = require("./models/Favorites"); // Import Favorites model
 
 // Create Express application instance
 const app = express();
