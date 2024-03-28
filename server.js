@@ -3,11 +3,18 @@ require("dotenv").config();
 
 // Import required modules
 const express = require("express");
+const cors = require("cors");
 const sequelize = require("./db/db"); // Import Sequelize instance
 const Favorites = require("./models/Favorites"); // Import Favorites model
 
 // Create Express application instance
 const app = express();
+
+// Use cors middleware with specific origin
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from this origin
+    // Other options...
+}));
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
