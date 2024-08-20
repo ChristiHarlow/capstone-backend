@@ -12,7 +12,7 @@ const app = express();
 
 // Use cors middleware with specific origin
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow requests from this origin
+    origin: 'https://www.christisfavoritethings.com', // Allow requests from this origin
     // Other options...
 }));
 
